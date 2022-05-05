@@ -2,7 +2,7 @@
   "name": "vue-custom-monaco-editor",
   "main": "dist/VueCustomMonacoEditor.common.js",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "files": [
     "dist/*",
     "*.js",
