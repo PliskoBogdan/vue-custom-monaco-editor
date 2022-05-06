@@ -9,6 +9,9 @@ jobs:
         with:
           node-version: "14"
 
+      - name: cd
+        run: cd ./
+        
       - name: Install
         run: npm install
 
