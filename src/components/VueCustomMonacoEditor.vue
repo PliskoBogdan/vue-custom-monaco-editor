@@ -1,5 +1,9 @@
 <template>
-  <div ref="editor" :style="style"></div>
+  <div style="position: relative;" :class="{ 'monaco-editor-text-error': isEditorError && isShowErrors }" ref="editor" :style="style">
+    <div v-if="isShowErrors" class="monaco-editor-error-area d-flex justify-center align-center">
+      <span v-if="editorErrorText !== ''" style="color: red">{{ editorErrorText }}</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -13,6 +17,7 @@ export default {
     height: { type: [String, Number], default: '100%' },
     original: String,
     value: String,
+    isShowTextError: { type: Boolean, default: false },
     language: { type: String, default: 'javascript' },
     theme: { type: String, default: 'vs' },
     options: {
@@ -25,6 +30,11 @@ export default {
     editorBeforeMount: { type: Function, default: noop }
   },
 
+  data: () => ({
+    isEditorError: false,
+    editorErrorText: ''
+  }),
+
   mounted() {
     this.initMonaco()
   },
@@ -34,10 +44,28 @@ export default {
   },
 
   computed: {
+    isShowErrors() {
+      if (this.isShowTextError && this.language === 'javascript') {
+        return true
+      }
+      return false
+    },
+
     style() {
       return {
         width: !/^\d+$/.test(this.width) ? this.width : `${this.width}px`,
         height: !/^\d+$/.test(this.height) ? this.height : `${this.height}px`
+      }
+    },
+
+    defaultOptions() {
+      return {
+        language: this.language,
+        value: this.value,
+        autoIndent: true,
+        formatOnPaste: true,
+        formatOnType: true,
+        ...this.options
       }
     }
   },
@@ -71,6 +99,10 @@ export default {
       }
     },
 
+    value() {
+      this.editor && this.value !== this._getValue() && this._setValue(this.value)
+    },
+
     theme() {
       this.editor && loader.__getMonacoInstance().editor.setTheme(this.theme)
     }
@@ -79,6 +111,9 @@ export default {
   methods: {
     initMonaco() {
       const el = this.$refs.editor
+      if (this.editor) {
+        return
+      }
       loader.init().then((monaco) => {
         this.editor = monaco.editor[this.diffEditor ? 'createDiffEditor' : 'create'](el, {
           language: this.language,
@@ -118,6 +153,7 @@ export default {
     },
 
     _setValue(value) {
+      this._validateText(value)
       let editor = this._getEditor()
       if (editor) {
         return editor.setValue(value)
@@ -139,10 +175,51 @@ export default {
       return editor.getValue()
     },
 
+    _validateText(value) {
+      if (!this.isShowErrors) {
+        return
+      }
+      this.isEditorError = false
+      this.editorErrorText = ''
+      try {
+        new Function(value)
+      } catch (error) {
+        this.editorErrorText = error
+        this.isEditorError = true
+      }
+    },
+
     _emitChange(value, event) {
+      this._validateText(value)
       this.$emit('change', value, event)
       this.$emit('input', value)
     }
   }
 }
 </script>
+
+<style scoped>
+.monaco-editor-text-error >>> .margin-view-overlays  {
+  border-bottom: 3px solid red;
+  border-left: 3px solid red;
+  border-top: 3px solid red;
+}
+.monaco-editor-text-error >>> .monaco-mouse-cursor-text {
+  border-bottom: 3px solid red;
+  border-top: 3px solid red;
+}
+.monaco-editor-text-error >>> .minimap-decorations-layer {
+  border-top: 3px solid red;
+  border-bottom: 3px solid red;
+}
+.monaco-editor-text-error >>> .decorationsOverviewRuler {
+  border-top: 3px solid red;
+  border-bottom: 3px solid red;
+  border-right: 3px solid red;
+}
+.monaco-editor-error-area {
+  position: absolute;
+  z-index: 999;
+  right: 0;
+}
+</style>
