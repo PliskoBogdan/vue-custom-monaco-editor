@@ -10,7 +10,7 @@ jobs:
           node-version: "14"
 
       - name: cd
-        run: cd ../
+        run: cd /home/runner/work/vue-custom-monaco-editor/
         
       - name: Install
         run: npm install
