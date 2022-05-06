@@ -1,4 +1,4 @@
-## Project setup
+## Project
 ```
 This component is similar to vue-monaco-editor, but with actual monaco-editor version.
 

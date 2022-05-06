@@ -1,12 +1,22 @@
 {
   "name": "vue-custom-monaco-editor",
   "main": "dist/VueCustomMonacoEditor.common.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "files": [
     "dist/*",
     "*.js",
     "*.json"
+  ],
+  "keywords": [
+    "Vue",
+    "monaco",
+    "monaco-editor",
+    "vue-monaco-editor",
+    "monaco-editor-vue",
+    "vue-custom-monaco-editor",
+    "vue-vscode",
+    "code-editor"
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
