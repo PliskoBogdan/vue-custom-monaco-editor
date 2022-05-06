@@ -2,7 +2,7 @@
   <div id="app">
     <monaco-editor 
       isShowTextError
-      :value="''"
+      :value="'c'"
       @input="onChange"
     />
   </div>
