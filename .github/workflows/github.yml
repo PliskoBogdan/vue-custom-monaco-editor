@@ -4,20 +4,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14"
-
-      - name: cd
-        run: cd /home/runner/work/vue-custom-monaco-editor/
-        
-      - name: Install
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
       - uses: actions/checkout@v3
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v3
