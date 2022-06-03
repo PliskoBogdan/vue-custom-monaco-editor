@@ -20,6 +20,12 @@ export default {
     isShowTextError: { type: Boolean, default: false },
     language: { type: String, default: 'javascript' },
     theme: { type: String, default: 'vs' },
+    loaderConfig: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     options: {
       type: Object,
       default() {
@@ -114,6 +120,13 @@ export default {
       if (this.editor) {
         return
       }
+
+      const isEmptyLoaderConfig = Object.keys(this.loaderConfig).length === 0
+
+      if (!isEmptyLoaderConfig) {
+        loader.config(this.loaderConfig)
+      }
+
       loader.init().then((monaco) => {
         this.editor = monaco.editor[this.diffEditor ? 'createDiffEditor' : 'create'](el, {
           language: this.language,

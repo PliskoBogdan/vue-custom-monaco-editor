@@ -3,11 +3,29 @@
 This component is similar to vue-monaco-editor, but with actual monaco-editor version.
 
 ```
+## Disable cdn scripts loading
+if you want to load monaco editor setting not from CDN (by defaul), you can create
+your config for monaco loader and give this config in property loaderConfig.
+Config example:
+```javascript
+   { config: { vs: 'path_to_vs/vs' }}
+```
+You can use CopyWebpackPlugin in your webpack, for copy all needest files 
+from node_modules and move to public folder.
+
+```javascript
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: 'node_modules/monaco-editor/min/vs/', to: 'vs' }
+        ]
+      }),
+```
+CopyWebpackPlugin - https://www.npmjs.com/package/copy-webpack-plugin
 
 ## Props
 If you specify `value` property, the component behaves in controlled mode.
 Otherwise, it behaves in uncontrolled mode.
-
+- `loaderConfig` - custom loader for @monaco-editor/loader
 - `isShowTextError` - allows you to wrap the text in a function and look 
    for the presence of syntacticerrors. In case of errors, 
    highlights the monaco border and displays the error text `(ONLY JS CODE)`
